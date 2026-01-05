@@ -1,6 +1,7 @@
 <?php
 // layouts/header.php
 if (session_status() === PHP_SESSION_NONE) session_start();
+require_once __DIR__ . "/icons.php";
 $title = $title ?? "SPK PROMETHEE";
 ?>
 <!doctype html>

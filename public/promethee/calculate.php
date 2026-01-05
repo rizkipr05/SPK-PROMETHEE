@@ -111,10 +111,19 @@ require_once __DIR__ . "/../../layouts/sidebar.php";
 
       <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
         <form method="POST" onsubmit="return confirm('Jalankan perhitungan PROMETHEE sekarang?');">
-          <button class="btn btn-primary" type="submit">🧮 Jalankan Perhitungan</button>
+          <button class="btn btn-primary" type="submit">
+            <span class="icon"><?= icon_svg("calculate") ?></span>
+            Jalankan Perhitungan
+          </button>
         </form>
-        <a class="btn" href="/spk-promethee/public/weights/index.php">⚖️ Cek Bobot</a>
-        <a class="btn" href="/spk-promethee/public/evaluations/index.php">🧾 Cek Nilai</a>
+        <a class="btn" href="/spk-promethee/public/weights/index.php">
+          <span class="icon"><?= icon_svg("weights") ?></span>
+          Cek Bobot
+        </a>
+        <a class="btn" href="/spk-promethee/public/evaluations/index.php">
+          <span class="icon"><?= icon_svg("evaluations") ?></span>
+          Cek Nilai
+        </a>
       </div>
 
       <div style="margin-top:14px;" class="muted">

@@ -55,8 +55,14 @@ require_once __DIR__ . "/../../layouts/sidebar.php";
         <p class="muted" style="margin:6px 0 0;">Menampilkan range kriteria, matriks π(a,b), serta flow per alternatif.</p>
       </div>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <a class="btn" href="/spk-promethee/public/promethee/calculate.php">🧮 Hitung & Simpan Run</a>
-        <a class="btn btn-primary" href="/spk-promethee/public/promethee/result.php">🏆 Lihat Hasil</a>
+        <a class="btn" href="/spk-promethee/public/promethee/calculate.php">
+          <span class="icon"><?= icon_svg("calculate") ?></span>
+          Hitung & Simpan Run
+        </a>
+        <a class="btn btn-primary" href="/spk-promethee/public/promethee/result.php">
+          <span class="icon"><?= icon_svg("result") ?></span>
+          Lihat Hasil
+        </a>
       </div>
     </div>
 
@@ -182,7 +188,13 @@ require_once __DIR__ . "/../../layouts/sidebar.php";
               $net = (float)($details["net"][$aid] ?? 0);
             ?>
               <tr style="border-bottom:1px solid #f1f5f9;">
-                <td style="padding:10px; font-weight:900;"><?= $rank === 1 ? "🥇 $rank" : $rank ?></td>
+                <td style="padding:10px; font-weight:900;">
+                  <?php if ($rank === 1): ?>
+                    <span class="icon"><?= icon_svg("star") ?></span> <?= $rank ?>
+                  <?php else: ?>
+                    <?= $rank ?>
+                  <?php endif; ?>
+                </td>
                 <td style="padding:10px;">
                   <div style="font-weight:900;"><?= htmlspecialchars($a["code"]) ?></div>
                   <div class="muted" style="font-size:12px;"><?= htmlspecialchars($a["name"]) ?></div>

@@ -48,7 +48,10 @@ require_once __DIR__ . "/../../layouts/sidebar.php";
         </p>
       </div>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <a class="btn btn-primary" href="/spk-promethee/public/promethee/calculate.php">🧮 Hitung Lagi</a>
+        <a class="btn btn-primary" href="/spk-promethee/public/promethee/calculate.php">
+          <span class="icon"><?= icon_svg("calculate") ?></span>
+          Hitung Lagi
+        </a>
       </div>
     </div>
 
@@ -79,7 +82,7 @@ require_once __DIR__ . "/../../layouts/sidebar.php";
                 <tr style="border-bottom:1px solid #f1f5f9;">
                   <td style="padding:10px; font-weight:900;">
                     <?php if ((int)$r["rank"] === 1): ?>
-                      🥇 <?= (int)$r["rank"] ?>
+                      <span class="icon"><?= icon_svg("star") ?></span> <?= (int)$r["rank"] ?>
                     <?php else: ?>
                       <?= (int)$r["rank"] ?>
                     <?php endif; ?>
