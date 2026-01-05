@@ -52,6 +52,10 @@ require_once __DIR__ . "/../../layouts/sidebar.php";
           <span class="icon"><?= icon_svg("calculate") ?></span>
           Hitung Lagi
         </a>
+        <a class="btn" href="#" data-print="true">
+          <span class="icon"><?= icon_svg("print") ?></span>
+          Cetak PDF
+        </a>
       </div>
     </div>
 

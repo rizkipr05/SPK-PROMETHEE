@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/../../app/auth/auth_check.php";
 require_once __DIR__ . "/../../app/config/database.php";
-require_once __DIR__ . "/../../app/promethee/engine.php";
+require_once __DIR__ . "/engine.php";
 
 $title = "Hitung PROMETHEE - SPK PROMETHEE";
 

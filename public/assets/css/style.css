@@ -223,3 +223,12 @@ body{
 }
 .kpi .num{font-size:22px;font-weight:900}
 .kpi .label{font-size:12px;color:var(--muted);font-weight:700}
+
+@media print{
+  body{background:#fff}
+  .topbar, .sidebar, .btn, .nav, .sidebar-footer, .user-chip{display:none !important}
+  .app{display:block}
+  .main{padding:0}
+  .container{max-width:100%}
+  .card{box-shadow:none;border:1px solid #e5e7eb}
+}

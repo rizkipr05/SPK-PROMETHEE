@@ -22,6 +22,8 @@ function icon_svg(string $name): string
       return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.7 5.3 5.9.9-4.3 4.2 1 6-5.3-2.8-5.3 2.8 1-6-4.3-4.2 5.9-.9L12 3z"></path></svg>';
     case "logout":
       return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="M9 17l5-5-5-5"></path><path d="M14 12H4"></path></svg>';
+    case "print":
+      return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V4h12v5"></path><rect x="6" y="14" width="12" height="7" rx="2"></rect><path d="M6 12H5a3 3 0 0 0-3 3v2"></path><path d="M18 12h1a3 3 0 0 1 3 3v2"></path></svg>';
   }
   return "";
 }

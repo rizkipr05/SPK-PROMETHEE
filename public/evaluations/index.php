@@ -2,71 +2,109 @@
 require_once __DIR__ . "/../../app/auth/auth_check.php";
 require_once __DIR__ . "/../../app/config/database.php";
 
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-  header("Location: /spk-promethee/public/weights/index.php");
-  exit;
+$title = "Input Nilai - SPK PROMETHEE";
+
+$alts = $pdo->query("SELECT id, code, name FROM alternatives ORDER BY code ASC")->fetchAll();
+$crits = $pdo->query("SELECT id, code, name, type FROM criteria ORDER BY code ASC")->fetchAll();
+
+$evals = $pdo->query("SELECT alternative_id, criteria_id, value FROM evaluations")->fetchAll();
+$values = [];
+foreach ($evals as $e) {
+  $values[(int)$e["alternative_id"]][(int)$e["criteria_id"]] = (float)$e["value"];
 }
 
-$weights = $_POST["weights"] ?? null;
-if (!is_array($weights) || count($weights) === 0) {
-  $_SESSION["_flash"]["error"] = "Tidak ada bobot yang dikirim.";
-  header("Location: /spk-promethee/public/weights/index.php");
-  exit;
-}
+$flash = $_SESSION["_flash"] ?? [];
+$msg_success = $flash["success"] ?? null;
+$msg_error = $flash["error"] ?? null;
+unset($_SESSION["_flash"]);
 
-// validasi & hitung total
-$total = 0.0;
-$clean = [];
+require_once __DIR__ . "/../../layouts/header.php";
+require_once __DIR__ . "/../../layouts/navbar.php";
+require_once __DIR__ . "/../../layouts/sidebar.php";
+?>
+<main class="main">
+  <div class="container">
+    <div class="card">
+      <h3 style="margin:0;">Input Nilai Alternatif</h3>
+      <p class="muted" style="margin:6px 0 0;">
+        Isi nilai tiap alternatif untuk setiap kriteria. Semua nilai wajib diisi angka.
+      </p>
 
-foreach ($weights as $criteria_id => $w) {
-  $cid = (int)$criteria_id;
-  $val = (float)$w;
+      <?php if ($msg_success): ?>
+        <div style="margin-top:12px; padding:10px 12px; border-radius:12px; background:rgba(34,197,94,.12); color:#166534; font-weight:700;">
+          <?= htmlspecialchars($msg_success) ?>
+        </div>
+      <?php endif; ?>
 
-  if ($cid <= 0) continue;
+      <?php if ($msg_error): ?>
+        <div style="margin-top:12px; padding:10px 12px; border-radius:12px; background:rgba(239,68,68,.12); color:#991b1b; font-weight:700;">
+          <?= htmlspecialchars($msg_error) ?>
+        </div>
+      <?php endif; ?>
 
-  if ($val < 0 || $val > 1) {
-    $_SESSION["_flash"]["error"] = "Bobot harus di antara 0 sampai 1.";
-    header("Location: /spk-promethee/public/weights/index.php");
-    exit;
-  }
+      <?php if (!$alts || !$crits): ?>
+        <div style="margin-top:14px;" class="muted">
+          Data belum lengkap. Pastikan <b>Alternatif</b> dan <b>Kriteria</b> sudah diisi.
+        </div>
+        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="btn" href="/spk-promethee/public/alternatives/index.php">Kelola Alternatif</a>
+          <a class="btn" href="/spk-promethee/public/criteria/index.php">Kelola Kriteria</a>
+        </div>
+      <?php else: ?>
+        <form method="POST" action="/spk-promethee/public/evaluations/store.php" style="margin-top:14px;">
+          <div style="overflow:auto;">
+            <table style="width:100%; border-collapse:collapse; min-width:920px;">
+              <thead>
+                <tr style="text-align:left; border-bottom:1px solid #e5e7eb;">
+                  <th style="padding:10px; width:220px;">Alternatif</th>
+                  <?php foreach ($crits as $c): ?>
+                    <th style="padding:10px;">
+                      <div style="font-weight:800;"><?= htmlspecialchars($c["code"]) ?></div>
+                      <div class="muted" style="font-size:11px;"><?= htmlspecialchars($c["name"]) ?></div>
+                      <div style="font-size:11px; font-weight:800; color:<?= $c["type"] === "benefit" ? "#166534" : "#991b1b" ?>;">
+                        <?= htmlspecialchars($c["type"]) ?>
+                      </div>
+                    </th>
+                  <?php endforeach; ?>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($alts as $a): ?>
+                  <tr style="border-bottom:1px solid #f1f5f9;">
+                    <td style="padding:10px;">
+                      <div style="font-weight:800;"><?= htmlspecialchars($a["code"]) ?></div>
+                      <div class="muted" style="font-size:12px;"><?= htmlspecialchars($a["name"]) ?></div>
+                    </td>
+                    <?php foreach ($crits as $c): 
+                      $aid = (int)$a["id"];
+                      $cid = (int)$c["id"];
+                      $val = $values[$aid][$cid] ?? "";
+                    ?>
+                      <td style="padding:10px;">
+                        <input
+                          type="number"
+                          name="values[<?= $aid ?>][<?= $cid ?>]"
+                          value="<?= htmlspecialchars((string)$val) ?>"
+                          step="0.001"
+                          style="width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:10px;"
+                          required
+                        >
+                      </td>
+                    <?php endforeach; ?>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
 
-  $clean[$cid] = $val;
-  $total += $val;
-}
-
-// total harus 1.00 (toleransi)
-$eps = 0.001; // toleransi
-if (abs($total - 1.0) > $eps) {
-  $_SESSION["_flash"]["error"] = "Total bobot harus = 1.00. Total kamu: " . number_format($total, 3);
-  header("Location: /spk-promethee/public/weights/index.php");
-  exit;
-}
-
-try {
-  $pdo->beginTransaction();
-
-  // upsert manual: insert jika belum ada, kalau ada update
-  $check = $pdo->prepare("SELECT id FROM weights WHERE criteria_id = ? LIMIT 1");
-  $ins   = $pdo->prepare("INSERT INTO weights (criteria_id, weight) VALUES (?, ?)");
-  $upd   = $pdo->prepare("UPDATE weights SET weight = ? WHERE criteria_id = ?");
-
-  foreach ($clean as $cid => $val) {
-    $check->execute([$cid]);
-    $exists = $check->fetch();
-
-    if ($exists) {
-      $upd->execute([$val, $cid]);
-    } else {
-      $ins->execute([$cid, $val]);
-    }
-  }
-
-  $pdo->commit();
-  $_SESSION["_flash"]["success"] = "Bobot berhasil disimpan. Total = " . number_format($total, 3);
-} catch (Throwable $e) {
-  $pdo->rollBack();
-  $_SESSION["_flash"]["error"] = "Gagal menyimpan bobot. " . $e->getMessage();
-}
-
-header("Location: /spk-promethee/public/weights/index.php");
-exit;
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn btn-primary" type="submit">Simpan Nilai</button>
+            <a class="btn" href="/spk-promethee/public/weights/index.php">Cek Bobot</a>
+            <a class="btn" href="/spk-promethee/public/promethee/calculate.php">Hitung PROMETHEE</a>
+          </div>
+        </form>
+      <?php endif; ?>
+    </div>
+  </div>
+</main>
+<?php require_once __DIR__ . "/../../layouts/footer.php"; ?>

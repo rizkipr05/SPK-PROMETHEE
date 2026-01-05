@@ -24,8 +24,25 @@ $error = flash_get("error");
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login - SPK PROMETHEE</title>
   <style>
-    body{font-family:Arial,Helvetica,sans-serif;background:#f5f7fb;margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center}
-    .card{width:100%;max-width:420px;background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.08);padding:26px}
+    *{box-sizing:border-box}
+    body{
+      font-family:Arial,Helvetica,sans-serif;
+      background:#f5f7fb;
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+    .card{
+      width:100%;
+      max-width:420px;
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 10px 30px rgba(0,0,0,.08);
+      padding:26px;
+    }
     h1{margin:0 0 6px;font-size:22px}
     p{margin:0 0 18px;color:#555;font-size:14px}
     .alert{background:#ffe8e8;color:#b00020;padding:10px 12px;border-radius:10px;margin-bottom:14px;font-size:13px}
@@ -35,6 +52,11 @@ $error = flash_get("error");
     button{width:100%;margin-top:16px;padding:12px;border:0;border-radius:12px;background:#4f46e5;color:#fff;font-weight:700;cursor:pointer}
     button:hover{filter:brightness(.95)}
     .hint{margin-top:12px;font-size:12px;color:#666}
+    @media (max-width: 480px){
+      body{padding:16px}
+      .card{padding:20px}
+      h1{font-size:20px}
+    }
   </style>
 </head>
 <body>
@@ -57,10 +79,6 @@ $error = flash_get("error");
 
       <button type="submit">Masuk</button>
     </form>
-
-    <div class="hint">
-      *Pastikan user admin sudah ada di tabel <b>users</b> dan password_hash valid.
-    </div>
   </div>
 </body>
 </html>

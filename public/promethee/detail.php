@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/../../app/auth/auth_check.php";
 require_once __DIR__ . "/../../app/config/database.php";
-require_once __DIR__ . "/../../app/promethee/details.php";
+require_once __DIR__ . "/details.php";
 
 $title = "Detail Perhitungan - PROMETHEE";
 
@@ -62,6 +62,10 @@ require_once __DIR__ . "/../../layouts/sidebar.php";
         <a class="btn btn-primary" href="/spk-promethee/public/promethee/result.php">
           <span class="icon"><?= icon_svg("result") ?></span>
           Lihat Hasil
+        </a>
+        <a class="btn" href="#" data-print="true">
+          <span class="icon"><?= icon_svg("print") ?></span>
+          Cetak PDF
         </a>
       </div>
     </div>
