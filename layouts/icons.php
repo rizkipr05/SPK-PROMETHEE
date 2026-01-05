@@ -20,6 +20,8 @@ function icon_svg(string $name): string
       return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="7" x2="20" y2="7"></line><line x1="8" y1="12" x2="20" y2="12"></line><line x1="8" y1="17" x2="20" y2="17"></line><circle cx="4" cy="7" r="1.5"></circle><circle cx="4" cy="12" r="1.5"></circle><circle cx="4" cy="17" r="1.5"></circle></svg>';
     case "star":
       return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.7 5.3 5.9.9-4.3 4.2 1 6-5.3-2.8-5.3 2.8 1-6-4.3-4.2 5.9-.9L12 3z"></path></svg>';
+    case "logout":
+      return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="M9 17l5-5-5-5"></path><path d="M14 12H4"></path></svg>';
   }
   return "";
 }

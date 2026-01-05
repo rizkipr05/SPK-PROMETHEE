@@ -51,6 +51,10 @@ function nav_active(string $current, array $paths): string
   </div>
 
   <div class="sidebar-footer">
-    <div class="small-muted">SPK PROMETHEE • Navigation</div>
+    <a class="nav-item nav-item-danger" href="<?= $base ?>/logout.php">
+      <span class="nav-icon"><?= icon_svg("logout") ?></span>
+      <span>Logout</span>
+    </a>
+    <div class="small-muted" style="margin-top:8px;">SPK PROMETHEE • Navigation</div>
   </div>
 </aside>
