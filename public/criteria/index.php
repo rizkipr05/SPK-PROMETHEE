@@ -1,0 +1,66 @@
+<?php
+require_once __DIR__ . "/../../app/auth/auth_check.php";
+require_once __DIR__ . "/../../app/config/database.php";
+
+$title = "Kriteria - SPK PROMETHEE";
+
+$rows = $pdo->query("SELECT id, code, name, type FROM criteria ORDER BY id DESC")->fetchAll();
+
+require_once __DIR__ . "/../../layouts/header.php";
+require_once __DIR__ . "/../../layouts/navbar.php";
+require_once __DIR__ . "/../../layouts/sidebar.php";
+?>
+<main class="main">
+  <div class="container">
+    <div class="card" style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+      <div>
+        <h3 style="margin:0;">Kriteria</h3>
+        <p class="muted" style="margin:6px 0 0;">Kelola kriteria (C1..C5) dan tipe benefit/cost.</p>
+      </div>
+      <a class="btn btn-primary" href="/spk-promethee/public/criteria/create.php">+ Tambah Kriteria</a>
+    </div>
+
+    <div class="card" style="margin-top:14px; overflow:auto;">
+      <table style="width:100%; border-collapse:collapse; min-width:720px;">
+        <thead>
+          <tr style="text-align:left; border-bottom:1px solid #e5e7eb;">
+            <th style="padding:10px;">Kode</th>
+            <th style="padding:10px;">Nama Kriteria</th>
+            <th style="padding:10px;">Tipe</th>
+            <th style="padding:10px; width:170px;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php if (!$rows): ?>
+            <tr>
+              <td colspan="4" style="padding:14px;" class="muted">Belum ada data kriteria.</td>
+            </tr>
+          <?php else: ?>
+            <?php foreach ($rows as $r): ?>
+              <tr style="border-bottom:1px solid #f1f5f9;">
+                <td style="padding:10px; font-weight:800;"><?= htmlspecialchars($r["code"]) ?></td>
+                <td style="padding:10px;"><?= htmlspecialchars($r["name"]) ?></td>
+                <td style="padding:10px;">
+                  <?php if ($r["type"] === "benefit"): ?>
+                    <span style="padding:6px 10px; border-radius:999px; background:rgba(34,197,94,.12); color:#166534; font-weight:800; font-size:12px;">benefit</span>
+                  <?php else: ?>
+                    <span style="padding:6px 10px; border-radius:999px; background:rgba(239,68,68,.12); color:#991b1b; font-weight:800; font-size:12px;">cost</span>
+                  <?php endif; ?>
+                </td>
+                <td style="padding:10px; display:flex; gap:8px;">
+                  <a class="btn" href="/spk-promethee/public/criteria/edit.php?id=<?= (int)$r["id"] ?>">Edit</a>
+
+                  <form method="POST" action="/spk-promethee/public/criteria/delete.php" onsubmit="return confirm('Hapus kriteria ini?');">
+                    <input type="hidden" name="id" value="<?= (int)$r["id"] ?>">
+                    <button class="btn" type="submit" style="border-color:#fecaca;">Hapus</button>
+                  </form>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          <?php endif; ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+<?php require_once __DIR__ . "/../../layouts/footer.php"; ?>
